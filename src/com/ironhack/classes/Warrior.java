@@ -1,6 +1,8 @@
 package com.ironhack.classes;
 
-public class Warrior extends Character{
+import com.ironhack.interfaces.Atacker;
+
+public class Warrior extends Character implements Atacker {
     private int stamina;
     private int strength;
 
@@ -8,6 +10,17 @@ public class Warrior extends Character{
         super(id, name, hp, isAlive);
         setStamina(stamina);
         setStrength(strength);
+    }
+
+    public double atack(){
+        if(this.stamina>=5){
+            this.stamina-=5;
+            return strength;
+        }else{
+            this.stamina++;
+            return Math.floor(strength/2);
+        }
+
     }
 
     public int getStamina() {

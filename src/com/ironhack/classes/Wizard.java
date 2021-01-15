@@ -1,6 +1,8 @@
 package com.ironhack.classes;
 
-public class Wizard extends Character{
+import com.ironhack.interfaces.Atacker;
+
+public class Wizard extends Character implements Atacker {
     private int mana;
     private int intelligence;
 
@@ -8,6 +10,17 @@ public class Wizard extends Character{
         super(id, name, hp, isAlive);
         setMana(mana);
         setIntelligence(intelligence);
+    }
+
+    public double atack(){
+        if(this.mana>=5){
+            this.mana-=5;
+            return intelligence;
+        }else{
+            this.mana++;
+            return 2;
+        }
+
     }
 
     public int getMana() {
