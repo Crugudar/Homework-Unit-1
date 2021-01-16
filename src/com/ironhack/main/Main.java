@@ -5,13 +5,11 @@ import com.ironhack.classes.Character;
 import com.ironhack.classes.Warrior;
 import com.ironhack.classes.Wizard;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
-    private static Object Character;
 
     public static void main(String[] args) {
 
@@ -26,7 +24,7 @@ public class Main {
             numberOfCharacters = scanner.nextInt();
         }
 
-        ArrayList<Character> userArmy=new ArrayList<Character>(numberOfCharacters);
+        ArrayList<Character> userArmy=new ArrayList<>(numberOfCharacters);
 
 
         for(int i=0; i<numberOfCharacters; i++){
@@ -61,8 +59,6 @@ public class Main {
             System.out.println("YOUR OPPONENT IS :");
             enemyCharacter.getStats();
 
-            String sure="n";
-
             int selection = userArmy.size();
             System.out.println("Choose one of YOUR characters to fight!!!!!!!");
 
@@ -71,6 +67,8 @@ public class Main {
                 selection = scanner.nextInt();
                 scanner.nextLine();
             }
+
+            String sure;
             do{
                 userArmy.get(selection).getStats();
                 System.out.println("Are you sure Y/N");
@@ -119,14 +117,14 @@ public class Main {
                 for (Character i: graveyard) {
                     System.out.println("Here lies " + i.getName());
                 }
-                System.out.println("Press enter to go back to battle");
+                System.out.println("Press ENTER to go back to battle");
                 scanner.nextLine();
             }
         }
 
         System.out.println("BATTLE FINISHED!!");
         if(enemyArmy.size() == 0 && userArmy.size() == 0){
-            System.out.println("Both armies have been DESTROYEED!!!!!");
+            System.out.println("WOW!! Both armies have been DESTROYED!!!!!");
         }else if(userArmy.size() == 0){
             System.out.println("YOU HAVE PERISHED!!!! SHAME TO YOUR FAMILY!");
         }else{
@@ -142,11 +140,11 @@ public class Main {
 
         String name= scanner.nextLine();
 
-        System.out.println("Choose his Health points between 100 and 200");
+        System.out.println("Choose his Health Points between 100 and 200");
 
         int hp = scanner.nextInt();
         while(hp<100||hp>200){
-            System.out.println("Type a valid hp");
+            System.out.println("Type a valid HP");
             hp = scanner.nextInt();
         }
 
@@ -165,7 +163,6 @@ public class Main {
             System.out.println("Type a valid stamina");
             strength = scanner.nextInt();
         }
-
 
         return  new Warrior(id, name, hp, true, stamina, strength);
 
@@ -200,7 +197,6 @@ public class Main {
             System.out.println("Type a valid stamina");
             intelligence = scanner.nextInt();
         }
-
 
         return  new Wizard(id, name, hp, true, mana, intelligence);
 
