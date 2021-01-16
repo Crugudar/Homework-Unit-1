@@ -1,3 +1,5 @@
 CLASS,NAME,HP,STAMINA/MANA,STRENGTH/INTELLIGENCE
 warrior,Pepito,100,10,10
 wizard,Franciscano,100,10,10
+warrior,Elana,0,0,0
+wizard,Mimi,0,0,0
