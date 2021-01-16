@@ -5,6 +5,7 @@ import com.ironhack.classes.Character;
 import com.ironhack.classes.Warrior;
 import com.ironhack.classes.Wizard;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -14,6 +15,7 @@ public class Main {
 
     public static void main(String[] args) {
 
+        ArrayList<Character> graveyard = new ArrayList<>();
         Scanner scanner= new Scanner(System.in);
         System.out.println("Welcome to the game!!! \n Hom many Characters do you want in your army?\n You can choose a number between 3 and 9");
 
@@ -61,12 +63,15 @@ public class Main {
 
             String sure="n";
 
-            int selection;
+            int selection = userArmy.size();
+            System.out.println("Choose one of YOUR characters to fight!!!!!!!");
 
-            do{
-                System.out.println("Choose one of YOUR characters to fight!!!!!!!\n You have to choose a number between 0 and "+ (userArmy.size()-1));
+            while (selection < 0 || selection >= userArmy.size()){
+                System.out.println("You have to choose a number between 0 and "+ (userArmy.size()-1));
                 selection = scanner.nextInt();
                 scanner.nextLine();
+            }
+            do{
                 userArmy.get(selection).getStats();
                 System.out.println("Are you sure Y/N");
                 sure= scanner.nextLine();
@@ -87,17 +92,46 @@ public class Main {
             }
 
             if(!character.isAlive() && !enemyCharacter.isAlive()){
+                System.out.println(character.getName() + " has been moved to graveyard");
+                System.out.println(enemyCharacter.getName() + " has been moved to graveyard");
+                graveyard.add(character);
+                graveyard.add(enemyCharacter);
                 userArmy.remove(character);
                 enemyArmy.remove(enemyCharacter);
             }else if(!character.isAlive()){
+                System.out.println(character.getName() + " has been moved to graveyard");
+                graveyard.add(character);
                 userArmy.remove(character);
             }else{
+                System.out.println(enemyCharacter.getName() + " has been moved to graveyard");
+                graveyard.add(enemyCharacter);
                 enemyArmy.remove(enemyCharacter);
+            }
+
+            int answer;
+            do{
+                System.out.println("Next action \n 1: Continue with battle \n 2: Check the graveyard");
+                answer = scanner.nextInt();
+                scanner.nextLine();
+            }while (answer != 2 && answer!=1);
+
+            if (answer == 2){
+                for (Character i: graveyard) {
+                    System.out.println("Here lies " + i.getName());
+                }
+                System.out.println("Press enter to go back to battle");
+                scanner.nextLine();
             }
         }
 
-
         System.out.println("BATTLE FINISHED!!");
+        if(enemyArmy.size() == 0 && userArmy.size() == 0){
+            System.out.println("Both armies have been DESTROYEED!!!!!");
+        }else if(userArmy.size() == 0){
+            System.out.println("YOU HAVE PERISHED!!!! SHAME TO YOUR FAMILY!");
+        }else{
+            System.out.println("YOU HAVE WON!!!! HONOR TO YOUR FAMILY!");
+        }
 
     }
 
