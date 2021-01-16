@@ -5,52 +5,86 @@ import com.ironhack.classes.Character;
 import com.ironhack.classes.Warrior;
 import com.ironhack.classes.Wizard;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
 
+        ArrayList<Character> userArmy=new ArrayList<>();
         ArrayList<Character> graveyard = new ArrayList<>();
         Scanner scanner= new Scanner(System.in);
-        System.out.println("Welcome to the game!!! \n Hom many Characters do you want in your army?\n You can choose a number between 3 and 9");
 
-        int numberOfCharacters = scanner.nextInt();
+        System.out.println("Welcome to the game!!! \n Do you wish to import your own party? Y/N");
+        String csv = scanner.nextLine();
+        if (csv.equals("y")){
+            System.out.println("Please, write the name of your file:");
+            csv = scanner.nextLine();
+            File file = new File(csv);
+            Scanner fileScan = new Scanner(file);
+            fileScan.nextLine();
 
-        while(numberOfCharacters<1||numberOfCharacters>9){
-            System.out.println("Type a valid number");
-            numberOfCharacters = scanner.nextInt();
-        }
+            int counter = 0;
+            while (fileScan.hasNextLine()){
+                String[] characterLine = fileScan.nextLine().split(",");
+                System.out.println(Arrays.toString(characterLine));
+                if (characterLine[0].toLowerCase().equals("warrior")){
+                    String name = characterLine[1];
+                    int hp = Integer.parseInt(characterLine[2]);
+                    int stamina = Integer.parseInt(characterLine[3]);
+                    int strength =Integer.parseInt(characterLine[4]);
+                    userArmy.add(new Warrior(counter, name, hp, true, stamina, strength));
+                    System.out.println("Warrior created from csv");
+                } else if (characterLine[0].toLowerCase().equals("wizard")) {
+                    String name = characterLine[1];
+                    int hp = Integer.parseInt(characterLine[2]);
+                    int mana = Integer.parseInt(characterLine[3]);
+                    int intelligence = Integer.parseInt(characterLine[4]);
+                    userArmy.add(new Wizard(counter, name, hp, true, mana, intelligence));
+                    System.out.println("Wizard created from csv");
+                }
+                counter++;
+            }
+        }else {
+            System.out.println("Hom many Characters do you want in your army?\n You can choose a number between 1 and 9");
 
-        ArrayList<Character> userArmy=new ArrayList<>(numberOfCharacters);
+            int numberOfCharacters = scanner.nextInt();
 
-
-        for(int i=0; i<numberOfCharacters; i++){
-
-            System.out.println("What do you want to create?\n Warrior=1 & Wizard=2");
-
-            int warriorOrWizard = scanner.nextInt();
-
-
-            while(warriorOrWizard!=1&&warriorOrWizard!=2){
+            while(numberOfCharacters<1||numberOfCharacters>9){
                 System.out.println("Type a valid number");
-                warriorOrWizard = scanner.nextInt();
-
+                numberOfCharacters = scanner.nextInt();
             }
 
-            if(warriorOrWizard==1){
-                System.out.println("Lets create a warrior");
-                userArmy.add( createAWarrior(scanner, i));
-            }else if(warriorOrWizard==2){
-                System.out.println("Lets create a wizard");
-                userArmy.add( createAWizard(scanner, i));
+
+            for(int i=0; i<numberOfCharacters; i++){
+
+                System.out.println("What do you want to create?\n Warrior=1 & Wizard=2");
+
+                int warriorOrWizard = scanner.nextInt();
+
+
+                while(warriorOrWizard!=1&&warriorOrWizard!=2){
+                    System.out.println("Type a valid number");
+                    warriorOrWizard = scanner.nextInt();
+
+                }
+
+                if(warriorOrWizard==1){
+                    System.out.println("Lets create a warrior");
+                    userArmy.add( createAWarrior(scanner, i));
+                }else if(warriorOrWizard==2){
+                    System.out.println("Lets create a wizard");
+                    userArmy.add( createAWizard(scanner, i));
+                }
             }
+            scanner.nextLine();
         }
-        scanner.nextLine();
 
-        ArrayList<Character>enemyArmy=createRandomArmy(numberOfCharacters);
+        ArrayList<Character>enemyArmy=createRandomArmy(userArmy.size());
 
         while(enemyArmy.size()>0 && userArmy.size()>0){
 
