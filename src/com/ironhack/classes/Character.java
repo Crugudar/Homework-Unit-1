@@ -1,6 +1,8 @@
 package com.ironhack.classes;
 
-public abstract class Character {
+import com.ironhack.interfaces.Atacker;
+
+public abstract class Character implements Atacker {
     protected int id;
     protected String name;
     protected int hp;
@@ -12,6 +14,8 @@ public abstract class Character {
         setHp(hp);
         setAlive(isAlive);
     }
+
+    public abstract void getStats();
 
     public int getId() {
         return id;

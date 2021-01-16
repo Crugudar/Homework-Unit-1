@@ -1,14 +1,17 @@
 package com.ironhack.main;
 
 
+import com.ironhack.classes.Character;
 import com.ironhack.classes.Warrior;
 import com.ironhack.classes.Wizard;
-import com.ironhack.interfaces.Atacker;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
+    private static Object Character;
+
     public static void main(String[] args) {
 
         Scanner scanner= new Scanner(System.in);
@@ -16,12 +19,13 @@ public class Main {
 
         int numberOfCharacters = scanner.nextInt();
 
-        while(numberOfCharacters<3||numberOfCharacters>9){
+        while(numberOfCharacters<1||numberOfCharacters>9){
             System.out.println("Type a valid number");
             numberOfCharacters = scanner.nextInt();
         }
 
-        Object[] userArmy=new Atacker[numberOfCharacters];
+        ArrayList<Character> userArmy=new ArrayList<Character>(numberOfCharacters);
+
 
         for(int i=0; i<numberOfCharacters; i++){
 
@@ -29,27 +33,71 @@ public class Main {
 
             int warriorOrWizard = scanner.nextInt();
 
+
             while(warriorOrWizard!=1&&warriorOrWizard!=2){
                 System.out.println("Type a valid number");
                 warriorOrWizard = scanner.nextInt();
+
             }
 
             if(warriorOrWizard==1){
                 System.out.println("Lets create a warrior");
-                userArmy[i]=createAWarrior(scanner,i);
+                userArmy.add( createAWarrior(scanner, i));
             }else if(warriorOrWizard==2){
                 System.out.println("Lets create a wizard");
-                userArmy[i]=createAWizard(scanner,i);
+                userArmy.add( createAWizard(scanner, i));
+            }
+        }
+        scanner.nextLine();
+
+        ArrayList<Character>enemyArmy=createRandomArmy(numberOfCharacters);
+
+        while(enemyArmy.size()>0 && userArmy.size()>0){
+
+            Character enemyCharacter = enemyArmy.get((int) Math.floor(Math.random() * enemyArmy.size())); // Molaría imprimir estadísticas
+
+            System.out.println("YOUR OPPONENT IS :");
+            enemyCharacter.getStats();
+
+            String sure="n";
+
+            int selection;
+
+            do{
+                System.out.println("Choose one of YOUR characters to fight!!!!!!!\n You have to choose a number between 0 and "+ (userArmy.size()-1));
+                selection = scanner.nextInt();
+                scanner.nextLine();
+                userArmy.get(selection).getStats();
+                System.out.println("Are you sure Y/N");
+                sure= scanner.nextLine();
+
+            } while (!sure.equals("y"));
+
+            System.out.println("THE BATTLE BEGINS!!!!!!");
+            Character character =userArmy.get(selection);
+            while (character.isAlive() && enemyCharacter.isAlive()){
+
+                double enemyDamage=enemyCharacter.attack();
+                double ourDamage=character.attack();
+
+                character.receiveDamage(enemyDamage);
+                enemyCharacter.receiveDamage(ourDamage);
+                System.out.println("Press ENTER to continue the battle");
+                scanner.nextLine();
+            }
+
+            if(!character.isAlive() && !enemyCharacter.isAlive()){
+                userArmy.remove(character);
+                enemyArmy.remove(enemyCharacter);
+            }else if(!character.isAlive()){
+                userArmy.remove(character);
+            }else{
+                enemyArmy.remove(enemyCharacter);
             }
         }
 
-        Object[]enemyArmy=createRandomArmy(numberOfCharacters);
 
-        Object enemyCharacter =enemyArmy[(int) Math.round(Math.random()*enemyArmy.length-1)]; // Molaría imprimir estadísticas
-
-
-
-        //System.out.println("Choose one of YOUR characters to fight!!!!!!!\n You have to choose a number between 0 and "+ (numberOfCharacters-1));
+        System.out.println("BATTLE FINISHED!!");
 
     }
 
@@ -125,12 +173,12 @@ public class Main {
 
     }
 
-    public static Object[] createRandomArmy(int numOfCharacters){
+    public static ArrayList<Character> createRandomArmy(int numOfCharacters){
         int counter=0; // que coja la length del array indicado por el usuario;
 
         String[] names= getNames(numOfCharacters);
 
-        Atacker[] army= new Atacker[numOfCharacters];
+        ArrayList<Character> army= new ArrayList<Character>(numOfCharacters);
 
         while (counter<numOfCharacters){
             int numero = (int) Math.round(Math.random());
@@ -145,8 +193,8 @@ public class Main {
                 String name=names[counter];
 
                 Warrior warrior = new Warrior(id, name,hp,true,stamina,strength);
-                army[counter]= warrior;
-                System.out.println("Warrior created "+ warrior.getId()+" "+warrior.getName()+" "+warrior.getHp()+" "+warrior.isAlive()+" "+warrior.getStamina()+" "+ warrior.getStrength());
+                army.add(warrior);
+                //System.out.println("Warrior created "+ warrior.getId()+" "+warrior.getName()+" "+warrior.getHp()+" "+warrior.isAlive()+" "+warrior.getStamina()+" "+ warrior.getStrength());
             }else{
 
                 int hp= (int) Math.round(Math.random()*50)+50;
@@ -156,8 +204,8 @@ public class Main {
                 String name=names[counter];
 
                 Wizard wizard = new Wizard(id, name,hp,true,mana,intelligence);
-                army[counter]= wizard;
-                System.out.println("wizard created "+ wizard.getId()+" "+wizard.getName()+" "+wizard.getHp()+" "+wizard.isAlive()+" "+wizard.getMana()+" "+ wizard.getIntelligence());
+                army.add(wizard);
+                //System.out.println("wizard created "+ wizard.getId()+" "+wizard.getName()+" "+wizard.getHp()+" "+wizard.isAlive()+" "+wizard.getMana()+" "+ wizard.getIntelligence());
             }
 
             counter++;
