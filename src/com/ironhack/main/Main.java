@@ -40,11 +40,17 @@ public class Main {
 //            Ask for the length of our team and store it in numberOfCharacters. This length should be higher than 0,
 //            but lower than 10 so the battle won't be endless
             System.out.println("How many Characters do you want in your army?\n You can choose a number between 1 and 9");
-            int numberOfCharacters = Integer.parseInt(scanner.nextLine());
+            int numberOfCharacters = 0;
 
             while(numberOfCharacters<1||numberOfCharacters>9){
-                System.out.println("Type a valid number");
-                numberOfCharacters = Integer.parseInt(scanner.nextLine());
+                try {
+                    numberOfCharacters = Integer.parseInt(scanner.nextLine());
+                    if(numberOfCharacters < 1 || numberOfCharacters > 9) {
+                        System.out.println("Type a valid number");
+                    }
+                } catch (Exception e) {
+                    System.out.println("Type a valid number");
+                }
             }
 
 //            For each index in userArmy(from 0 to numberOfCharacters) we ask for the new character to create,
@@ -52,16 +58,24 @@ public class Main {
             for(int i=0; i<numberOfCharacters; i++){
 
                 System.out.println("What do you want to create?\n 1. Warrior\n 2. Wizard");
-                String warriorOrWizard = scanner.nextLine();
-                while(!warriorOrWizard.equals("1") && !warriorOrWizard.equals("2")){
-                    System.out.println("Type a valid number");
-                    warriorOrWizard = scanner.nextLine();
+                int warriorOrWizard = 0;
+                while(warriorOrWizard != 1 && warriorOrWizard != 2){
+                  try{
+                      warriorOrWizard = Integer.parseInt(scanner.nextLine());
+
+                      if(warriorOrWizard != 1 && warriorOrWizard != 2) {
+                          System.out.println("Type a valid number");
+                      }
+                  } catch (Exception e) {
+                      System.out.println("Type a valid number");
+                  }
+
                 }
 
-                if(warriorOrWizard.equals("1")){
+                if(warriorOrWizard == 1){
                     System.out.println("Let's create a warrior");
                     userArmy.add( createAWarrior(scanner, i));
-                }else if(warriorOrWizard.equals("2")){
+                }else if(warriorOrWizard == 2){
                     System.out.println("Let's create a wizard");
                     userArmy.add( createAWizard(scanner, i));
                 }
@@ -89,21 +103,22 @@ public class Main {
             int selection = userArmy.size();
             System.out.println("Choose one of YOUR characters to fight!!!!!!!");
 
-            while (selection < 0 || selection >= userArmy.size()){
-                System.out.println("You have to choose a number between 0 and "+ (userArmy.size()-1));
-//                por alguna razon, aquí no me deja hacer lo de Integer.parseInt, así que lo dejo tal cual
-                selection = scanner.nextInt();
-                scanner.nextLine();
+            String sure = "n";
+            while (selection < 0 || selection >= userArmy.size() || !sure.toLowerCase().equals("y")) {
+                try {
+                    System.out.println("You have to choose a number between 0 and " + (userArmy.size() - 1));
+                    selection = Integer.parseInt(scanner.nextLine());
+                    if(selection >= 0 && selection < userArmy.size()){
+                        //            Make sure this is the chosen fighter:
+                        userArmy.get(selection).getStats();
+                        System.out.println("Are you sure Y/N");
+                        sure = scanner.nextLine();
+                    }
+                }
+                catch (Exception e){
+
+                }
             }
-
-//            Make sure this is the chosen fighter:
-            String sure;
-            do{
-                userArmy.get(selection).getStats();
-                System.out.println("Are you sure Y/N");
-                sure= scanner.nextLine();
-
-            } while (!sure.toLowerCase().equals("y"));
 
 //            Here we go. The characters will fight until one of them is no longer alive:
             System.out.println("THE BATTLE BEGINS!!!!!!");
@@ -124,22 +139,15 @@ public class Main {
             // When a character dies it's moved to the graveyard
             // Three possible outcomes:
             // -- Draw: both die
-            if(!character.isAlive() && !enemyCharacter.isAlive()){
-                System.out.println(character.getName() + " has been moved to graveyard");
-                System.out.println(enemyCharacter.getName() + " has been moved to graveyard");
-                graveyard.add(character);
-                graveyard.add(enemyCharacter);
-                // Remove characters from the ArrayLists
-                userArmy.remove(character);
-                enemyArmy.remove(enemyCharacter);
-            // -- The user's character dies
-            }else if(!character.isAlive()){
+            //HE QUITADO LA PRIMERA CONDICIÓN DE EMPATE PORQUE ESTOS DOS IF NO SON EXCLUYENTES, POR LO QUE EN CASO DE EMPATE ENTRA EN LOS DOS
+            if(!character.isAlive()){
                 System.out.println(character.getName() + " has been moved to graveyard");
                 graveyard.add(character);
                 // Remove character from the ArrayList
                 userArmy.remove(character);
             // -- The enemy dies
-            }else{
+            }
+            if(!enemyCharacter.isAlive()){
                 System.out.println(enemyCharacter.getName() + " has been moved to graveyard");
                 graveyard.add(enemyCharacter);
                 // Remove character from the ArrayList
@@ -187,16 +195,13 @@ public class Main {
 //        Asking for the health points and checking if the introduced values are inside of normal ranges with correctStat(line ...)
 //        Same with strength and stamina
         System.out.println("Choose his Health Points between 100 and 200");
-        int hp = Integer.parseInt(scanner.nextLine());
-        hp = correctStat(hp,"hp", "warrior", scanner, name);
+        int hp = correctStat(0,"hp", "warrior", scanner, name);
 
         System.out.println("Choose his stamina between 10 and 50");
-        int stamina = Integer.parseInt(scanner.nextLine());
-        stamina = correctStat(stamina,"stamina", "warrior", scanner, name);
+        int stamina = correctStat(0,"stamina", "warrior", scanner, name);
 
         System.out.println("Choose his strength between 1 and 10");
-        int strength = Integer.parseInt(scanner.nextLine());
-        strength = correctStat(strength,"strength", "warrior", scanner, name);
+        int strength = correctStat(0,"strength", "warrior", scanner, name);
 
         return new Warrior(id, name, hp, true, stamina, strength);
     }
@@ -207,16 +212,13 @@ public class Main {
         String name= scanner.nextLine();
 
         System.out.println("Choose his Health points between 50 and 100");
-        int hp = scanner.nextInt();
-        hp = correctStat(hp,"hp", "wizard", scanner, name);
+        int hp = correctStat(0,"hp", "wizard", scanner, name);
 
         System.out.println("Choose his mana between 10 and 50");
-        int mana = scanner.nextInt();
-        mana = correctStat(mana,"mana", "wizard", scanner, name);
+        int mana = correctStat(0,"mana", "wizard", scanner, name);
 
         System.out.println("Choose his intelligence between 1 and 50");
-        int intelligence = scanner.nextInt();
-        intelligence = correctStat(intelligence,"intelligence", "wizard", scanner, name);
+        int intelligence = correctStat(0,"intelligence", "wizard", scanner, name);
 
         return  new Wizard(id, name, hp, true, mana, intelligence);
     }
@@ -280,22 +282,38 @@ public class Main {
                 switch (stat){
                     case "hp":
                         while(value<100 || value>200){
-                            System.out.println("Type a valid hp for " + name);
-                            value = Integer.parseInt(scanner.nextLine());
+                            try {
+                                value = Integer.parseInt(scanner.nextLine());
+                                if(value < 100 || value > 200) {
+                                    System.out.println("Type a valid hp for " + name);
+                                }
+                            } catch(Exception e) {
+                                System.out.println("Type a valid hp for " + name);
+                            }
                         }
                         break;
                     case "stamina":
                         while(value<10||value>50){
-                            System.out.println("Type a valid stamina for " + name);
-                            value = scanner.nextInt();
-                            scanner.nextLine();
+                            try {
+                                value = Integer.parseInt(scanner.nextLine());
+                                if(value < 10 || value > 50) {
+                                    System.out.println("Type a valid stamina for " + name);
+                                }
+                            } catch(Exception e) {
+                                System.out.println("Type a valid stamina for " + name);
+                            }
                         }
                         break;
                     case "strength":
                         while(value<1||value>10){
-                            System.out.println("Type a valid strength for " + name);
-                            value = scanner.nextInt();
-                            scanner.nextLine();
+                            try {
+                                value = Integer.parseInt(scanner.nextLine());
+                                if(value < 1 || value > 10) {
+                                    System.out.println("Type a valid strength for " + name);
+                                }
+                            } catch(Exception e) {
+                                System.out.println("Type a valid strength for " + name);
+                            }
                         }
                         break;
                 }
@@ -304,23 +322,38 @@ public class Main {
                 switch (stat){
                     case "hp":
                         while(value<50||value>100){
-                            System.out.println("Type a valid hp for " + name);
-                            value = scanner.nextInt();
-                            scanner.nextLine();
+                            try {
+                                value = Integer.parseInt(scanner.nextLine());
+                                if(value < 50 || value > 100) {
+                                    System.out.println("Type a valid hp for " + name);
+                                }
+                            } catch(Exception e) {
+                                System.out.println("Type a valid hp for " + name);
+                            }
                         }
                         break;
                     case "mana":
                         while(value<10||value>50){
-                            System.out.println("Type a valid mana for " + name);
-                            value = scanner.nextInt();
-                            scanner.nextLine();
+                            try {
+                                value = Integer.parseInt(scanner.nextLine());
+                                if(value < 10 || value > 50) {
+                                    System.out.println("Type a valid mana for " + name);
+                                }
+                            } catch(Exception e) {
+                                System.out.println("Type a valid mana for " + name);
+                            }
                         }
                         break;
                     case "intelligence":
                         while(value<1||value>50){
-                            System.out.println("Type a valid intelligence for " + name);
-                            value = scanner.nextInt();
-                            scanner.nextLine();
+                            try {
+                                value = Integer.parseInt(scanner.nextLine());
+                                if(value < 1 || value > 50) {
+                                    System.out.println("Type a valid intelligence for " + name);
+                                }
+                            } catch(Exception e) {
+                                System.out.println("Type a valid intelligence for " + name);
+                            }
                         }
                         break;
                 }
