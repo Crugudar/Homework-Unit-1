@@ -39,12 +39,24 @@ public class Main {
         }else {
 //            Ask for the length of our team and store it in numberOfCharacters. This length should be higher than 0,
 //            but lower than 10 so the battle won't be endless
+            int numberOfCharacters = 0;
             System.out.println("How many Characters do you want in your army?\n You can choose a number between 1 and 9");
-            int numberOfCharacters = Integer.parseInt(scanner.nextLine());
+
+            try{
+                numberOfCharacters = Integer.parseInt(scanner.nextLine());
+            }catch (Exception e){
+                System.out.println("Please, use numbers, not words");
+                numberOfCharacters = 0;
+            }
 
             while(numberOfCharacters<1||numberOfCharacters>9){
-                System.out.println("Type a valid number");
-                numberOfCharacters = Integer.parseInt(scanner.nextLine());
+                try{
+                    System.out.println("Type a valid number");
+                    numberOfCharacters = Integer.parseInt(scanner.nextLine());
+                }catch (Exception e){
+                    System.out.println("Please, use numbers, not words");
+                    numberOfCharacters = 0;
+                }
             }
 
 //            For each index in userArmy(from 0 to numberOfCharacters) we ask for the new character to create,
