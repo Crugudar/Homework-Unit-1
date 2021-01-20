@@ -14,8 +14,6 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
-//        PREGUNTA: ¿DEBERIAMOS CAMBIAR TODOS LOS SCANNER.NEXTINT POR INTEGER.PARSEINT(SCANNER.NEXTLINE)
-//        Y NOS AHORRAMOS LOS SCANNER.NEXTLINE DESPUES DE CADA NEXTINT, O PENSAIS QUE NOS VAN A SALTAR ERRORES?
 
 //        We start creating two empty arrays: one for our team and another for the graveyard:
         ArrayList<Character> userArmy = new ArrayList<>();
@@ -44,6 +42,7 @@ public class Main {
 
             while(numberOfCharacters<1||numberOfCharacters>9){
                 try {
+//                    Integer.parseInt() could throw an exception if the user introduces a non-numeric character. We will manage it in the catch
                     numberOfCharacters = Integer.parseInt(scanner.nextLine());
                     if(numberOfCharacters < 1 || numberOfCharacters > 9) {
                         System.out.println("Type a valid number");
@@ -85,6 +84,9 @@ public class Main {
 //        Now we can create the enemy team calling createRandomArmy(line ...) and passing our team length to this function
         ArrayList<Character>enemyArmy = createRandomArmy(userArmy.size());
 
+//        This boolean will allow us to watch the parties fight by themselves or for us to command our fighters
+        boolean autoFight = false;
+
 //        The battle starts and will continue until one of the teams has length 0.
 //        This is, when all the members of one team have been removed from their array to the graveyard
         while(enemyArmy.size()>0 && userArmy.size()>0){
@@ -101,28 +103,52 @@ public class Main {
 //            If the introduced value is not inside this range, the user will be asked again.
 //            We store the id of the chosen character in selection
             int selection = userArmy.size();
-            System.out.println("Choose one of YOUR characters to fight!!!!!!!");
 
-            String sure = "n";
-            while (selection < 0 || selection >= userArmy.size() || !sure.toLowerCase().equals("y")) {
-                try {
-                    System.out.println("You have to choose a number between 0 and " + (userArmy.size() - 1));
-                    selection = Integer.parseInt(scanner.nextLine());
-                    if(selection >= 0 && selection < userArmy.size()){
-                        //            Make sure this is the chosen fighter:
-                        userArmy.get(selection).getStats();
-                        System.out.println("Are you sure Y/N");
-                        sure = scanner.nextLine();
-                    }
+            if (!autoFight){
+//                Asking whether we want to see an automatic fight or we prefer to choose our fighters
+                System.out.println("Choose one option \n 1: Pick my fighters  2: Watch an automatic fight");
+                String option = scanner.nextLine();
+                while(!option.equals("1") && !option.equals("2")){
+                    System.out.println(option);
+                    System.out.println("Type a valid number");
+                    option = scanner.nextLine();
                 }
-                catch (Exception e){
+//                if we choose the second option, autoFight get enabled
+                if (option.equals("2")){
+                    autoFight = true;
+                }
+            }
 
+//            We will be able to choose our fighters only if autoFight is disabled(false)
+            if (autoFight){
+                selection = (int) Math.round(Math.random() * (userArmy.size() - 1));
+                System.out.println("Someone jumps into batterfield to face the opponent!");
+                userArmy.get(selection).getStats();
+                autoFight = true;
+            }else{
+                System.out.println("Choose one of YOUR characters to fight!!!!!!!");
+
+                String sure = "n";
+                while (selection < 0 || selection >= userArmy.size() || !sure.toLowerCase().equals("y")) {
+                    try {
+                        System.out.println("You have to choose a number between 0 and " + (userArmy.size() - 1));
+                        selection = Integer.parseInt(scanner.nextLine());
+                        if(selection >= 0 && selection < userArmy.size()){
+                            //            Make sure this is the chosen fighter:
+                            userArmy.get(selection).getStats();
+                            System.out.println("Are you sure Y/N");
+                            sure = scanner.nextLine();
+                        }
+                    }
+                    catch (Exception e){
+                        System.out.println("Type a valid number");
+                    }
                 }
             }
 
 //            Here we go. The characters will fight until one of them is no longer alive:
             System.out.println("THE BATTLE BEGINS!!!!!!");
-            Character character =userArmy.get(selection);
+            Character character = userArmy.get(selection);
             while (character.isAlive() && enemyCharacter.isAlive()){
 
                 // Calculate the damage dealt
@@ -132,8 +158,13 @@ public class Main {
                 character.receiveDamage(enemyDamage);
                 enemyCharacter.receiveDamage(ourDamage);
 
-                System.out.println("Press ENTER to continue the battle");
-                scanner.nextLine();
+//                uncomment the if if we want to see the whole fight without pressing a button
+//                if(!autoFight){
+                    System.out.println("Press ENTER to continue the battle");
+                    scanner.nextLine();
+//                }else {
+//                    System.out.println("\n");
+//                }
             }
 
             // When a character dies it's moved to the graveyard
@@ -155,20 +186,24 @@ public class Main {
             }
 
 //            Before the next fight begins, we have the option of going to the graveyard and check:
-            String answer;
-            do{
-                System.out.println("Next action \n 1: Continue with battle \n 2: Check the graveyard");
-                answer = scanner.nextLine();
-            }while (!answer.equals("2") && !answer.equals("1"));
+//            We only want to do this if we are not in the autofight mode
+            if (!autoFight){
+                String answer;
+                do{
+                    System.out.println("Next action \n 1: Continue with battle \n 2: Check the graveyard");
+                    answer = scanner.nextLine();
+                }while (!answer.equals("2") && !answer.equals("1"));
 
-            if (answer.equals("2")){
-                // Show graveyard
-                for (Character i: graveyard) {
-                    System.out.println("Here lies " + i.getName() + ". Beloved friend. So so father and husband");
+                if (answer.equals("2")){
+                    // Show graveyard
+                    for (Character i: graveyard) {
+                        System.out.println("Here lies " + i.getName() + ". Beloved friend. So so father and husband");
+                    }
+                    System.out.println("Press ENTER to go back to battle");
+                    scanner.nextLine();
                 }
-                System.out.println("Press ENTER to go back to battle");
-                scanner.nextLine();
             }
+
         }
 
         System.out.println("BATTLE FINISHED!!");

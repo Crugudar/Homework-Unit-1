@@ -13,7 +13,7 @@ public class Wizard extends Character implements Atacker {
     }
     @Override
     public void getStats() {
-        System.out.println(" Name: "+ getName()+"\n Hp: "+getHp()+"\n Mana: "+getMana()+"\n Intelligence: "+getIntelligence());
+        System.out.println(" Name: "+ getName()+"\n Hp: "+getHp()+"\n Mana: "+getMana()+"\n Intelligence: "+getIntelligence()+"\n");
     }
 
     @Override

@@ -14,7 +14,7 @@ public class Warrior extends Character implements Atacker {
 
     @Override
     public void getStats() {
-        System.out.println(" Name: "+ getName()+"\n Hp: "+getHp()+"\n Stamina: "+getStamina()+"\n Strength: "+getStrength());
+        System.out.println(" Name: "+ getName()+"\n Hp: "+getHp()+"\n Stamina: "+getStamina()+"\n Strength: "+getStrength()+"\n");
     }
 
     @Override
