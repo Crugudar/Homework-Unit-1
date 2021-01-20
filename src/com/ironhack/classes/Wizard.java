@@ -19,11 +19,11 @@ public class Wizard extends Character implements Atacker {
     @Override
     public double attack(){
         if(this.mana>=5){
-            System.out.println(getName()+" attacks with Fireball!!");
+            System.out.println(getName()+" attacks with Fireball and deals "+intelligence+" damage!!");
             this.mana-=5;
             return intelligence;
         }else{
-            System.out.println(getName()+" attacks with Staff.. (weak!)");
+            System.out.println(getName()+" attacks with Staff.. (weak! dealt 2 damage)");
             this.mana++;
             return 2;
         }

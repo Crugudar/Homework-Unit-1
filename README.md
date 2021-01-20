@@ -15,15 +15,15 @@ The user must write "y" to choose this option. If that is the case, the user wil
 - `STAMINA` (for warriors) and `MANA` (for wizards): between 10-50
 - `STRENGTH` (for warriors): between 1-10 / `INTELLIGENCE` (for wizards): between 1-50
 
-If you want an example, we have included the file *party.csv*
+If you want an example, we have included the files *wrongParty.csv* (which contains two characters with invalid stats) and *party.csv*.
 
 ### Introduce your characters manually
 If you don't want to import a file, you will be asked how many members will be in your party (between 1 and 9). Next, you will be able to choose the class (warrior or wizard), and the rest of the stats. Again, the limits will be the same as previously explained.
 
-When your party is complete, the enemy party will be generated. The size of the enemy party will be the same as yours, and their stats will be randomly generated inside the stablished limits explained before.
+When your party is complete, the enemy party will be generated. The size of the enemy party will be the same as yours, and their stats will be randomly generated inside the stablished limits explained before. Also, you will be asked if you want to export your party to a .csv file. Write "y" to do so.
 
 ## The battle begins
-First of all, a random opponent will be chosen, and its stats will be shown in the console. Then, you will be asked to choose between:
+First, a random opponent will be chosen, and its stats will be shown in the console. Then, you will be asked to choose between:
 
 1. Choosing your fighter
 2. Automatic fight

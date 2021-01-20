@@ -7,6 +7,8 @@ import com.ironhack.classes.Wizard;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -108,6 +110,42 @@ public class Main {
 //        This is, when all the members of one team have been removed from their array to the graveyard
         while(enemyArmy.size()>0 && userArmy.size()>0){
 
+            System.out.println("Do you want to export your party to a .csv file? Type 'y' for YES");
+//            Save the answer in variable export. If "y", export the values of the Players to a .csv file
+            String export = scanner.nextLine();
+            if (export.equals("y")){
+                String outputFile = "";
+//                The output filename cannot be empty
+                while (outputFile.isEmpty()){
+                    System.out.println("Write the name of the output file: ");
+                    outputFile = scanner.nextLine();
+                }
+                if (!outputFile.endsWith(".csv")){
+                    outputFile+=".csv";
+                }
+                try {
+//                    Open the file
+                    FileWriter fileWriter = new FileWriter(outputFile, false);
+//                    Write the header
+                    fileWriter.write("CLASS,NAME,HP,STAMINA/MANA,STRENGTH/INTELLIGENCE\n");
+//                    Write the characters' stats, differentiates Warrior and Wizard classes
+                    for(Character c : userArmy ){
+                        if (c.getClass() == Warrior.class){
+                            fileWriter.write("warrior,"+c.getName()+","+c.getHp()+","+((Warrior) c).getStamina()+","+((Warrior) c).getStrength()+"\n");
+                        }else if (c.getClass() == Wizard.class){
+                            fileWriter.write("wizard,"+c.getName()+","+c.getHp()+","+((Wizard) c).getMana()+","+((Wizard) c).getIntelligence()+"\n");
+                        }
+                    }
+                    fileWriter.close();
+                    System.out.println("Party successfully exported to "+outputFile+"\nPress ENTER to continue");
+                    scanner.nextLine();
+
+                } catch (IOException e) {
+                }
+
+            }
+
+
 //            Choosing a random enemy:
             Character enemyCharacter = enemyArmy.get((int) Math.floor(Math.random() * enemyArmy.size()));
 
@@ -116,7 +154,7 @@ public class Main {
             enemyCharacter.getStats();
 
 //            Asking for the user to choose his character to fight the enemy.
-//            We'll ask from a number from 0 to userArmy.size()-1, that will correspond to the id of one character of our team.
+//            We'll ask for a number from 0 to userArmy.size()-1, that will correspond to the id of one character of our team.
 //            If the introduced value is not inside this range, the user will be asked again.
 //            We store the id of the chosen character in selection
             int selection = userArmy.size();
@@ -163,7 +201,7 @@ public class Main {
                 }
             }
 
-//            Here we go. The characters will fight until one of them is no longer alive:
+//          Here we go. The characters will fight until one of them is no longer alive:
             System.out.println("THE BATTLE BEGINS!!!!!!");
             Character character = userArmy.get(selection);
             while (character.isAlive() && enemyCharacter.isAlive()){
@@ -175,7 +213,7 @@ public class Main {
                 character.receiveDamage(enemyDamage);
                 enemyCharacter.receiveDamage(ourDamage);
 
-//                uncomment the if if we want to see the whole fight without pressing a button
+//                uncomment the "if-else" if we want to see the whole fight without pressing a button
 //                if(!autoFight){
                     System.out.println("Press ENTER to continue the battle");
                     scanner.nextLine();
@@ -187,14 +225,14 @@ public class Main {
             // When a character dies it's moved to the graveyard
             // Three possible outcomes:
             // -- Draw: both die
-            //HE QUITADO LA PRIMERA CONDICIÓN DE EMPATE PORQUE ESTOS DOS IF NO SON EXCLUYENTES, POR LO QUE EN CASO DE EMPATE ENTRA EN LOS DOS
+            // -- Only your character dies
             if(!character.isAlive()){
                 System.out.println(character.getName() + " has been moved to graveyard");
                 graveyard.add(character);
                 // Remove character from the ArrayList
                 userArmy.remove(character);
-            // -- The enemy dies
             }
+            // -- The enemy dies
             if(!enemyCharacter.isAlive()){
                 System.out.println(enemyCharacter.getName() + " has been moved to graveyard");
                 graveyard.add(enemyCharacter);
@@ -216,8 +254,11 @@ public class Main {
                     for (Character i: graveyard) {
                         System.out.println("Here lies " + i.getName() + " Beloved friend. So so father and husband");
                     }
-                    System.out.println("Press ENTER to go back to battle");
-                    scanner.nextLine();
+                    System.out.println("Write F to pay your respects");
+                    String respects = scanner.nextLine();
+                    if (respects.toLowerCase().equals("f")){
+                        System.out.println("You paid your respects");
+                    }
                 }
             //}
 

@@ -20,11 +20,11 @@ public class Warrior extends Character implements Atacker {
     @Override
     public double attack(){
         if(this.stamina>=5){
-            System.out.println(getName()+" attacks with HEAVY attack!!");
+            System.out.println(getName()+" attacks with HEAVY attack and deals "+strength+" damage!!");
             this.stamina-=5;
             return strength;
         }else{
-            System.out.println(getName()+" attacks with weak attack.. (not very effective)");
+            System.out.println(getName()+" attacks with weak attack.. (not very effective, dealt "+(int) Math.floor(strength/2.0)+"damage");
             this.stamina++;
             return Math.floor(strength/2.0);
         }
