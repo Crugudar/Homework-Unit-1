@@ -23,16 +23,33 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
 //        Along with the welcome message we ask whether the user wish to import the team from a file or create it manually
-        System.out.println("Welcome to the game!!! \n Do you wish to import your own party? Y/N");
+        System.out.println("Welcome to the game!!! \n Do you wish to import your own party? Type 'y' for YES");
 //        Save the answer in variable csv. If "y", import the text from the file.
 //        Otherwise, the user will be asked to write the info from each character
         String csv = scanner.nextLine();
 
         if (csv.toLowerCase().equals("y")){
 //            We ask for the name of the file, and pass it to the importArmy function(line ...) to create our team
-            System.out.println("Please, write the name of your .csv file:");
-            String fileName = scanner.nextLine();
-            userArmy = importArmy(userArmy, fileName);
+
+
+            boolean fileDetected=false;
+
+            while(fileDetected==false){
+                System.out.println("Please, write the name of your .csv file:");
+                try {
+                    String fileName = scanner.nextLine();
+                    if(fileName.endsWith(".csv")){
+                        userArmy = importArmy(userArmy, fileName);
+                    }else{
+                        String withCsv=fileName.trim()+".csv";
+                        userArmy = importArmy(userArmy, withCsv);
+                    }
+                    fileDetected=true;
+                }catch (FileNotFoundException e){
+                    System.out.println("Be sure that your file exists in this project");
+                }
+            }
+
 
         }else {
 //            Ask for the length of our team and store it in numberOfCharacters. This length should be higher than 0,
@@ -136,7 +153,7 @@ public class Main {
                         if(selection >= 0 && selection < userArmy.size()){
                             //            Make sure this is the chosen fighter:
                             userArmy.get(selection).getStats();
-                            System.out.println("Are you sure Y/N");
+                            System.out.println("Are you sure? Type 'y' for YES");
                             sure = scanner.nextLine();
                         }
                     }
@@ -187,7 +204,7 @@ public class Main {
 
 //            Before the next fight begins, we have the option of going to the graveyard and check:
 //            We only want to do this if we are not in the autofight mode
-            if (!autoFight){
+            //if (!autoFight){
                 String answer;
                 do{
                     System.out.println("Next action \n 1: Continue with battle \n 2: Check the graveyard");
@@ -197,12 +214,12 @@ public class Main {
                 if (answer.equals("2")){
                     // Show graveyard
                     for (Character i: graveyard) {
-                        System.out.println("Here lies " + i.getName() + ". Beloved friend. So so father and husband");
+                        System.out.println("Here lies " + i.getName() + " Beloved friend. So so father and husband");
                     }
                     System.out.println("Press ENTER to go back to battle");
                     scanner.nextLine();
                 }
-            }
+            //}
 
         }
 
@@ -229,13 +246,13 @@ public class Main {
 
 //        Asking for the health points and checking if the introduced values are inside of normal ranges with correctStat(line ...)
 //        Same with strength and stamina
-        System.out.println("Choose his Health Points between 100 and 200");
+        //System.out.println("Choose his Health Points between 100 and 200");
         int hp = correctStat(0,"hp", "warrior", scanner, name);
 
-        System.out.println("Choose his stamina between 10 and 50");
+        //System.out.println("Choose his stamina between 10 and 50");
         int stamina = correctStat(0,"stamina", "warrior", scanner, name);
 
-        System.out.println("Choose his strength between 1 and 10");
+        //System.out.println("Choose his strength between 1 and 10");
         int strength = correctStat(0,"strength", "warrior", scanner, name);
 
         return new Warrior(id, name, hp, true, stamina, strength);
@@ -246,13 +263,13 @@ public class Main {
         System.out.println("Choose a name for your wizard");
         String name= scanner.nextLine();
 
-        System.out.println("Choose his Health points between 50 and 100");
+        //System.out.println("Choose his Health points between 50 and 100");
         int hp = correctStat(0,"hp", "wizard", scanner, name);
 
-        System.out.println("Choose his mana between 10 and 50");
+        //System.out.println("Choose his mana between 10 and 50");
         int mana = correctStat(0,"mana", "wizard", scanner, name);
 
-        System.out.println("Choose his intelligence between 1 and 50");
+        //System.out.println("Choose his intelligence between 1 and 50");
         int intelligence = correctStat(0,"intelligence", "wizard", scanner, name);
 
         return  new Wizard(id, name, hp, true, mana, intelligence);
@@ -318,36 +335,39 @@ public class Main {
                     case "hp":
                         while(value<100 || value>200){
                             try {
-                                value = Integer.parseInt(scanner.nextLine());
+
                                 if(value < 100 || value > 200) {
-                                    System.out.println("Type a valid hp for " + name);
+                                    System.out.println("Type a valid health points for " + name+" (Between 100 and 200)");
+                                    value = Integer.parseInt(scanner.nextLine());
                                 }
                             } catch(Exception e) {
-                                System.out.println("Type a valid hp for " + name);
+
                             }
                         }
                         break;
                     case "stamina":
                         while(value<10||value>50){
                             try {
-                                value = Integer.parseInt(scanner.nextLine());
+
                                 if(value < 10 || value > 50) {
-                                    System.out.println("Type a valid stamina for " + name);
+                                    System.out.println("Choose a valid stamina for " + name+" (Between 10 and 50)");
+                                    value = Integer.parseInt(scanner.nextLine());
                                 }
                             } catch(Exception e) {
-                                System.out.println("Type a valid stamina for " + name);
+
                             }
                         }
                         break;
                     case "strength":
                         while(value<1||value>10){
                             try {
-                                value = Integer.parseInt(scanner.nextLine());
+
                                 if(value < 1 || value > 10) {
-                                    System.out.println("Type a valid strength for " + name);
+                                    System.out.println("Choose a valid strength for " + name +" (Between 1 and 10)");
+                                    value = Integer.parseInt(scanner.nextLine());
                                 }
                             } catch(Exception e) {
-                                System.out.println("Type a valid strength for " + name);
+
                             }
                         }
                         break;
@@ -358,36 +378,39 @@ public class Main {
                     case "hp":
                         while(value<50||value>100){
                             try {
-                                value = Integer.parseInt(scanner.nextLine());
+
                                 if(value < 50 || value > 100) {
-                                    System.out.println("Type a valid hp for " + name);
+                                    System.out.println("Choose a valid hp for " + name+" (Between 50 and 100)");
+                                    value = Integer.parseInt(scanner.nextLine());
                                 }
                             } catch(Exception e) {
-                                System.out.println("Type a valid hp for " + name);
+
                             }
                         }
                         break;
                     case "mana":
                         while(value<10||value>50){
                             try {
-                                value = Integer.parseInt(scanner.nextLine());
+
                                 if(value < 10 || value > 50) {
-                                    System.out.println("Type a valid mana for " + name);
+                                    System.out.println("Choose a valid mana for " + name+" (Between 10 and 50)");
+                                    value = Integer.parseInt(scanner.nextLine());
                                 }
                             } catch(Exception e) {
-                                System.out.println("Type a valid mana for " + name);
+
                             }
                         }
                         break;
                     case "intelligence":
                         while(value<1||value>50){
                             try {
-                                value = Integer.parseInt(scanner.nextLine());
+
                                 if(value < 1 || value > 50) {
-                                    System.out.println("Type a valid intelligence for " + name);
+                                    System.out.println("Choose a valid intelligence for " + name+" (Between 1 and 50)");
+                                    value = Integer.parseInt(scanner.nextLine());
                                 }
                             } catch(Exception e) {
-                                System.out.println("Type a valid intelligence for " + name);
+
                             }
                         }
                         break;

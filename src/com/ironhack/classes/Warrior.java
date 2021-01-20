@@ -39,12 +39,12 @@ public class Warrior extends Character implements Atacker {
             setAlive(false);
         }else{
             if(damage>7){
-                System.out.println("Wow that was critical!!!!");
+                System.out.println(getName()+" received a damage of: "+ damage +" Wow that was critical!!!!");
 
             }else if(damage<=7&&damage>4){
-                System.out.println("Good attack");
+                System.out.println(getName()+" received a damage of: "+ damage +" Not so bad");
             }else{
-                System.out.println("booooooo!!!");
+                System.out.println(getName()+" received a damage of: "+ damage +" Wake up you are going to die!!!");
             }
             System.out.println(getName()+" has "+getHp()+" health points left");
         }
