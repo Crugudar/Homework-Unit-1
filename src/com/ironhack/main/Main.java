@@ -31,7 +31,7 @@ public class Main {
         String csv = scanner.nextLine();
 
         if (csv.toLowerCase().equals("y")){
-//            We ask for the name of the file, and pass it to the importArmy function(line ...) to create our team
+//            We ask for the name of the file, and pass it to the importArmy function(line 323) to create our team
 
 
             boolean fileDetected=false;
@@ -72,7 +72,7 @@ public class Main {
             }
 
 //            For each index in userArmy(from 0 to numberOfCharacters) we ask for the new character to create,
-//            and depending on the chosen option, we will call either createAWarrior(line ...) or createAWizard(line ...)
+//            and depending on the chosen option, we will call either createAWarrior(line 283) or createAWizard(line 303)
             for(int i=0; i<numberOfCharacters; i++){
 
                 System.out.println("What do you want to create?\n 1. Warrior\n 2. Wizard");
@@ -100,7 +100,7 @@ public class Main {
             }
         }
 
-//        Now we can create the enemy team calling createRandomArmy(line ...) and passing our team length to this function
+//        Now we can create the enemy team calling createRandomArmy(line 465) and passing our team length to this function
         ArrayList<Character>enemyArmy = createRandomArmy(userArmy.size());
 
 //        This boolean will allow us to watch the parties fight by themselves or for us to command our fighters
@@ -213,18 +213,12 @@ public class Main {
                 character.receiveDamage(enemyDamage);
                 enemyCharacter.receiveDamage(ourDamage);
 
-//                uncomment the "if-else" if we want to see the whole fight without pressing a button
-//                if(!autoFight){
-                    System.out.println("Press ENTER to continue the battle");
-                    scanner.nextLine();
-//                }else {
-//                    System.out.println("\n");
-//                }
+                System.out.println("Press ENTER to continue the battle");
+                scanner.nextLine();
             }
 
             // When a character dies it's moved to the graveyard
-            // Three possible outcomes:
-            // -- Draw: both die
+            // Two possible outcomes:
             // -- Only your character dies
             if(!character.isAlive()){
                 System.out.println(character.getName() + " has been moved to graveyard");
@@ -241,26 +235,23 @@ public class Main {
             }
 
 //            Before the next fight begins, we have the option of going to the graveyard and check:
-//            We only want to do this if we are not in the autofight mode
-            //if (!autoFight){
-                String answer;
-                do{
-                    System.out.println("Next action \n 1: Continue with battle \n 2: Check the graveyard");
-                    answer = scanner.nextLine();
-                }while (!answer.equals("2") && !answer.equals("1"));
+            String answer;
+            do{
+                System.out.println("Next action \n 1: Continue with battle \n 2: Check the graveyard");
+                answer = scanner.nextLine();
+            }while (!answer.equals("2") && !answer.equals("1"));
 
-                if (answer.equals("2")){
-                    // Show graveyard
-                    for (Character i: graveyard) {
-                        System.out.println("Here lies " + i.getName() + " Beloved friend. So so father and husband");
-                    }
-                    System.out.println("Write F to pay your respects");
-                    String respects = scanner.nextLine();
-                    if (respects.toLowerCase().equals("f")){
-                        System.out.println("You paid your respects");
-                    }
+            if (answer.equals("2")){
+                // Show graveyard
+                for (Character i: graveyard) {
+                    System.out.println("Here lies " + i.getName() + " Beloved friend. So so father and husband");
                 }
-            //}
+                System.out.println("Write F to pay your respects");
+                String respects = scanner.nextLine();
+                if (respects.toLowerCase().equals("f")){
+                    System.out.println("You paid your respects");
+                }
+            }
 
         }
 
@@ -287,13 +278,10 @@ public class Main {
 
 //        Asking for the health points and checking if the introduced values are inside of normal ranges with correctStat(line ...)
 //        Same with strength and stamina
-        //System.out.println("Choose his Health Points between 100 and 200");
         int hp = correctStat(0,"hp", "warrior", scanner, name);
 
-        //System.out.println("Choose his stamina between 10 and 50");
         int stamina = correctStat(0,"stamina", "warrior", scanner, name);
 
-        //System.out.println("Choose his strength between 1 and 10");
         int strength = correctStat(0,"strength", "warrior", scanner, name);
 
         return new Warrior(id, name, hp, true, stamina, strength);
@@ -304,13 +292,10 @@ public class Main {
         System.out.println("Choose a name for your wizard");
         String name= scanner.nextLine();
 
-        //System.out.println("Choose his Health points between 50 and 100");
         int hp = correctStat(0,"hp", "wizard", scanner, name);
 
-        //System.out.println("Choose his mana between 10 and 50");
         int mana = correctStat(0,"mana", "wizard", scanner, name);
 
-        //System.out.println("Choose his intelligence between 1 and 50");
         int intelligence = correctStat(0,"intelligence", "wizard", scanner, name);
 
         return  new Wizard(id, name, hp, true, mana, intelligence);
@@ -335,7 +320,6 @@ public class Main {
 //            break the line in the commas, and store the words in the list characterLine.
 //            First index will be the class, then name, hp and so on
             String[] characterLine = fileScan.nextLine().split(",");
-//            System.out.println(Arrays.toString(characterLine));
 
 //            check the first index to be class warrior or wizard, and create the character from there:
             if (characterLine[0].toLowerCase().equals("warrior")){
@@ -466,7 +450,7 @@ public class Main {
 //        counter variable to use as id of the characters
         int counter=0;
 
-//        calling getNames(line ...) to obtain the list of names of the enemies
+//        calling getNames(line 492) to obtain the list of names of the enemies
         String[] names= getNames(numOfCharacters);
 
         ArrayList<Character> army= new ArrayList<Character>(numOfCharacters);
@@ -485,7 +469,6 @@ public class Main {
 
                 Warrior warrior = new Warrior(id, name,hp,true,stamina,strength);
                 army.add(warrior);
-                //System.out.println("Warrior created "+ warrior.getId()+" "+warrior.getName()+" "+warrior.getHp()+" "+warrior.isAlive()+" "+warrior.getStamina()+" "+ warrior.getStrength());
             }else{
 
                 int hp= (int) Math.round(Math.random()*50)+50;
@@ -496,7 +479,6 @@ public class Main {
 
                 Wizard wizard = new Wizard(id, name,hp,true,mana,intelligence);
                 army.add(wizard);
-                //System.out.println("wizard created "+ wizard.getId()+" "+wizard.getName()+" "+wizard.getHp()+" "+wizard.isAlive()+" "+wizard.getMana()+" "+ wizard.getIntelligence());
             }
             counter++;
         }
