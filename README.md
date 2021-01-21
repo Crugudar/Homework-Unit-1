@@ -17,6 +17,8 @@ The user must write "y" to choose this option. If that is the case, the user wil
 
 If you want an example, we have included the files *wrongParty.csv* (which contains two characters with invalid stats) and *party.csv*.
 
+** Note that there is no character limit using this method
+
 ### Introduce your characters manually
 If you don't want to import a file, you will be asked how many members will be in your party (between 1 and 9). Next, you will be able to choose the class (warrior or wizard), and the rest of the stats. Again, the limits will be the same as previously explained.
 
